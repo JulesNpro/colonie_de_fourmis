@@ -36,7 +36,7 @@ Lancement de l'application
 
     bash
 
-    python fourmis.py
+    python app.py
 
     L'application simule les actions des fourmis dans la colonie, et affiche les résultats tels que la nourriture collectée, les nouvelles fourmis produites, et l'énergie restante de la colonie.
 
