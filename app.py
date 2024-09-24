@@ -1,23 +1,48 @@
 import random
 
 class Fourmi:
-    energie_class = 20  # Énergie partagée de la colonie
+    energie_class = 0  # Énergie partagée de la colonie, initialisée à 10 pour tester
 
-    ### classe mère Fourmi ###
-    def __init__(self, nom, energie, force, vitesse):
+    def __init__(self, nom, energie, force, vitesse, special):
         self.nom = nom
         self.energie = energie
         self.force = force
         self.vitesse = vitesse
+        self.__special = special
+
+    @property
+    def pouvoir_special(self):
+        return self.__special
+    
+    @pouvoir_special.setter
+    def pouvoir_special(self, bonus):
+        if bonus >= 0:
+            self.__special = bonus
+        else:
+            raise ValueError("Le bonus doit être positif ou nul.")
+        
+    def Kimeraboost(self):
+        if self.energie == 0:  # Vérifiez si l'énergie de la fourmi est à zéro
+            boost = self.pouvoir_special  # Utiliser le pouvoir spécial comme boost
+            if boost > 0:  # S'assurer que le boost est positif
+                self.energie += boost
+                Fourmi.energie_class += boost  # Restaurer l'énergie de la colonie
+                print(f"{self.nom} reçoit un boost d'énergie : +{boost} énergie. Nouvelle énergie : {self.energie}.")
+           
+           ## SORTIR DE LA BOUCLE DU KIMERA BOOST
+            else:
+                print(f"{self.nom} n'a pas de pouvoir spécial pour le boost.")
 
     @classmethod
-    def se_deplacer(cls):
+    def se_deplacer(cls, fourmi):
         # Déplacer une fourmi, ce qui consomme de l'énergie partagée par la colonie
         if cls.energie_class > 0:
             cls.energie_class -= 1
             print(f"Une fourmi se déplace. Énergie de la colonie restante : {cls.energie_class}.")
         else:
-            print("La colonie n'a plus d'énergie pour se déplacer.")
+            print(f"La colonie n'a plus d'énergie pour se déplacer. Activation du KimeraBoost.")
+            fourmi.Kimeraboost()
+            print(f"Valeur de l'énergie boostée : {fourmi.energie} (après activation du boost)")
 
 
 class Ouvriere(Fourmi):
@@ -47,21 +72,22 @@ colonie = []
 
 # Ajout des ouvrières
 for i in range(5):
-    colonie.append(Ouvriere(f"Ouvrière_{i+1}", energie=random.randint(5, 10), force=2, vitesse=5))
+    colonie.append(Ouvriere(f"Ouvrière_{i+1}", energie=random.randint(5, 10), force=2, vitesse=5, special=1))
 
 # Ajout des soldats
 for i in range(3):
-    colonie.append(Soldat(f"Soldat_{i+1}", energie=random.randint(6, 12), force=random.randint(5, 8), vitesse=3))
+    colonie.append(Soldat(f"Soldat_{i+1}", energie=random.randint(6, 12), force=random.randint(5, 8), vitesse=3, special=1))
 
-# Ajout de la reine
-colonie.append(Reine(f"Kimera", energie=20, force=10, vitesse=1))
+# Ajout de la reine avec un pouvoir spécial
+reine = Reine(f"Kimera", energie=20, force=10, vitesse=1, special=5)  # Exemple avec pouvoir spécial de 5
+colonie.append(reine)
 
 # Simulation de la colonie
 nourriture_totale = 0
 nouvelles_fourmis_totales = 0
 
 for fourmi in colonie:
-    Fourmi.se_deplacer()  # Utilisation de la méthode de classe
+    Fourmi.se_deplacer(fourmi)  # Utilisation de la méthode de classe avec l'instance de la fourmi
 
     if isinstance(fourmi, Ouvriere):
         nourriture_totale += fourmi.collecter_nourriture()
