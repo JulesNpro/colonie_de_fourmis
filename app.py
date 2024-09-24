@@ -64,3 +64,7 @@ class Reine(Fourmi):
             fourmi.defendre_colonie()
         elif isinstance(fourmi,Reine):
             nouvelles_fourmis_totales += fourmi.produire_fourmis()
+            
+    # Affichage des résultats
+    print(f"Nourriture totale collectée : {nourriture_totale}")
+    print(f"Nouvelles fourmis produites : {nouvelles_fourmis_totales}")
